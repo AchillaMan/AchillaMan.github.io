@@ -1,5 +1,5 @@
 /* Base styles */
-body { background: black; color: #cccccc; font-family: 'Courier New', Courier, monospace; font-size: 16px; line-height: 1.6; margin: 0; padding: 0; overflow-x: hidden; }
+body { background: black; color: #cccccc; font-family: 'Courier New', Courier, monospace; font-size: 18px; line-height: 1.6; margin: 0; padding: 0; overflow-x: hidden; }
 
 /* Container */
 .container { 
@@ -12,13 +12,9 @@ body { background: black; color: #cccccc; font-family: 'Courier New', Courier, m
     position: relative; 
     z-index: 1; 
 }
-/* Base styles - increased text size */
-body { background: black; color: #cccccc; font-family: 'Courier New', Courier, monospace; font-size: 18px; line-height: 1.6; margin: 0; padding: 0; overflow-x: hidden; }
 
-/* Paragraph style - increased text size */
-p { font-size: 17px; color: #cccccc; margin-bottom: 1.2rem; white-space: pre-wrap; }
- 
-div, section, article { max-width: 80ch; margin-left: auto; margin-right: auto; white-space: normal; }
+/* Limit max width for readability */
+body, p, div, section, article { max-width: 80ch; margin-left: auto; margin-right: auto; white-space: normal; }
 
 /* Block code blocks */
 pre { max-width: none; background: #0a0303; color: #e9ede9; padding: 1.2em; border: 1px solid #440000; font-family: monospace; font-size: 14px; overflow-x: auto; border-radius: 4px; margin: 1em 0; white-space: pre; }
@@ -27,15 +23,27 @@ pre > code { display: block; white-space: inherit; font-family: inherit; font-si
 /* Inline code */
 code:not(pre > code) { background: #0a0303; color: #ff3333; padding: 0.1em 0.3em; font-family: monospace; font-size: 0.95em; border-radius: 3px; border: 1px solid #440000; display: inline; line-height: 1.2; }
 
-/* Headings with original style */
-h1, h2, h3 { font-weight: bold; color: #ff0000; position: relative; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; animation: glitch 1s infinite, rainbow-text 4s linear infinite; background: linear-gradient(90deg, red, orange, yellow, lime, cyan, blue, magenta, red); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 5px #0f0, 0 0 10px #0ff, 0 0 15px #f0f; }
+/* Headings - Solid red with glitch, no rainbow */
+h1, h2, h3 { 
+    font-weight: bold; 
+    color: #ff0000; 
+    position: relative; 
+    text-transform: uppercase; 
+    letter-spacing: 0.1em; 
+    margin-bottom: 1.5rem; 
+    animation: glitch 1s infinite; 
+    background: none; 
+    -webkit-background-clip: initial; 
+    -webkit-text-fill-color: #ff0000; 
+    text-shadow: 0 0 5px #ff0000, 2px 0px #0ff; 
+}
 
 /* Links - Hover turns to lighter red (#ff6666) */
 a { color: #ff0000; text-decoration: none; border-bottom: 1px dashed #ff0000; transition: all 0.3s ease; }
 a:hover, a:focus { color: #ff6666; border-bottom: 1px solid #ff6666; text-shadow: 0 0 10px #ff6666; }
 
-/* Paragraph style */
-p { font-size: 15px; color: #cccccc; margin-bottom: 1.2rem; white-space: pre-wrap; }
+/* Paragraph style - increased text size */
+p { font-size: 17px; color: #cccccc; margin-bottom: 1.2rem; white-space: pre-wrap; }
 
 /* CRT scanlines */
 .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 1px, transparent 1px, transparent 3px); mix-blend-mode: overlay; z-index: 9999; pointer-events: none; }
@@ -47,11 +55,6 @@ p { font-size: 15px; color: #cccccc; margin-bottom: 1.2rem; white-space: pre-wra
   40% { text-shadow: 2px 0 cyan, -2px 0 red, 0 0 10px #ff0000; }
   60% { text-shadow: -2px 0 cyan, 2px 0 red, 0 0 10px #ff0000; }
   80%, 100% { text-shadow: 0 0 15px #ff0000; }
-}
-
-@keyframes rainbow-text { 
-  0% { background-position: 0% center; } 
-  100% { background-position: 200% center; } 
 }
 
 /* --- GRID & CARDS --- */
@@ -75,4 +78,4 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 /* Card Titles - Hover turns to lighter red */
 .card h3 { margin: 0 0 10px 0; font-size: 1.1rem; animation: none; text-shadow: none; color: #ffffff; letter-spacing: normal; text-transform: none; }
 .card:hover h3 { color: #ff6666; }
-.card p { font-size: 0.9rem; border: none; margin: 0; color: #999999; }
+.card p { font-size: 0.95rem; border: none; margin: 0; color: #999999; }
