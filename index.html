@@ -1,19 +1,27 @@
 ---
 layout: default
+title: "~/whoami"
 ---
 
-<h2 id="ctf">notable writeups and research</h2>
-<div class="grid">
-    {% for post in site.posts %}
-      {% if post.category != 'Archive' %}
-        <a href="{{ post.url | relative_url }}" class="card">
-            <div class="card-header">
-                <span class="badge">{{ post.category }}</span>
-                <span class="date">{{ post.date | date: "%b %Y" }}</span>
-            </div>
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
-        </a>
-      {% endif %}
-    {% endfor %}
+<div class="hero">
+    <h1>whoami?</h2>
+    <p>
+        I am Achilles aka achilla, I started learning about cybersecurity in highschool when i first joined the annual national greek students
+        competition (PMDK), for the first 1 to 2 years i was kind of indifferent about cybersecurity, however after meeting new people in the field,
+        and looked into it further with my friends, i started looking at it more seriously and as something i want to do professionally, specifically
+        as a Vulnerability Researcher, I am currently a university student of the International Hellenic University in Thessaloniki.
+    </p>
 </div>
+
+<h2>Areas of Focus</h2>
+<p>
+- <strong>pwn / binary exploitation</strong>
+- <strong>reverse engineering</strong>
+- <strong>web exploitation</strong>
+</p>
+
+<h2>Contact</h2>
+<p>
+- GitHub: <a href="https://github.com/AchillaMan" target="_blank">github.com/AchillaMan</a><br>
+- Discord: <a target="_blank">achillaman</a><br>
+</p>
