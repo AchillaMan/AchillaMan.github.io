@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page.title | default: "~/research/writeups" }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* PASTE ALL THE CSS FROM THE ORIGINAL FILE HERE */
+        /* (Including :root, body, .container, .card, etc.) */
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav>
+        <a href="/" class="logo">0xWriteups</a>
+        <div class="nav-links">
+            <a href="/#ctf">CTF</a>
+            <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <!-- Jekyll will inject the page or markdown content here -->
+    {{ content }}
+
+    <footer>
+        <p>Hosted on <a href="https://pages.github.com/">GitHub Pages</a>.</p>
+    </footer>
+</div>
+</body>
+</html>
