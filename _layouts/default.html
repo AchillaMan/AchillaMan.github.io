@@ -3,27 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ page.title | default: "~/research/writeups" }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Link to external CSS -->
+    <!-- Link to the new brutalist CSS -->
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 </head>
 <body>
-<div class="container">
-    <nav>
-        <a href="{{ '/' | relative_url }}" class="logo glitch" data-text="Challenge write-ups">Challenge write-ups</a>
-        <div class="nav-links">
-            <a href="{{ '/#ctf' | relative_url }}">CTF</a>
-            <a href="{{ '/archive/' | relative_url }}">Archive</a>
-            <a href="https://github.com/AchillaMan" target="_blank">GitHub</a>
+    <!-- CRT Scanlines overlay -->
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <!-- New Scrolling Banner -->
+        <div class="scrolling-banner">
+            <span class="text">WARNING: UNAUTHORIZED ACCESS DETECTED // SECURITY CLEARANCE REQUIRED // SYSTEM COMPROMISED //</span>
         </div>
-    </nav>
 
-    {{ content }}
-
-    <footer>
-        <p>Hosted on <a href="https://pages.github.com/">GitHub Pages</a>.</p>
-    </footer>
-</div>
+        <nav>
+            <a href="{{ '/' | relative_url }}" class="logo">0xWriteups</a>
+            <div class="nav-links">
+                <a href="{{ '/#ctf' | relative_url }}">CTF</a>
+                <a href="{{ '/archive/' | relative_url }}">Archive</a>
+                <a href="https://github.com/AchillaMan" target="_blank">GitHub</a>
+            </div>
+        </nav>
+    
+        {{ content }}
+    
+        <br><br>
+        <footer>
+            <p>Connection encrypted. Hosted on <a href="https://pages.github.com/">GitHub Pages</a>.</p>
+        </footer>
+    </div>
 </body>
 </html>
