@@ -73,11 +73,11 @@ h2 { font-size: 1.3rem; margin-bottom: 25px; color: var(--text-primary); }
 }
 .glitch::before {
     left: 2px; text-shadow: -2px 0 #ff2a2a;
-    animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+    animation: glitch-anim-1 6s infinite linear alternate-reverse;
 }
 .glitch::after {
     left: -2px; text-shadow: 2px 0 #0ff;
-    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    animation: glitch-anim-2 8s infinite linear alternate-reverse;
 }
 
 @keyframes glitch-anim-1 {
