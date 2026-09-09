@@ -4,19 +4,24 @@ title: "~/archive"
 ---
 
 <div class="hero">
-    <p class="glitch" data-text="Minor challenges, scripts, and quick notes.">Minor challenges, scripts, and quick notes.</p>
+    <h2>Archive</h2>
+    <p>challenge write-ups</p>
 </div>
 
-<h2 id="archive">Archive</h2>
-<div class="grid">
-    {% for post in site.categories.Archive %}
-    <a href="{{ post.url | relative_url }}" class="card">
-        <div class="card-header">
-            <span class="badge">Minor</span>
-            <span class="date">{{ post.date | date: "%b %Y" }}</span>
-        </div>
-        <h3>{{ post.title }}</h3>
-        <p>{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
-    </a>
-    {% endfor %}
-</div>
+{% assign grouped_posts = site.categories.Archive | group_by_exp: "post", "post.date | date: '%Y'" %}
+
+{% for year in grouped_posts %}
+    <h3 style="margin-top: 40px; border-bottom: 1px dashed #440000; padding-bottom: 5px;">// {{ year.name }}</h3>
+    <div class="grid" style="margin-top: 20px;">
+        {% for post in year.items %}
+        <a href="{{ post.url | relative_url }}" class="card-archive">
+            <div class="card-header">
+                <span class="badge">Archived</span>
+                <span class="date">{{ post.date | date: "%b %d" }}</span>
+                <!-- h3 is inside the header for a tight, single-line look -->
+                <h3 style="display:inline; margin-left: 15px;">{{ post.title }}</h3>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% endfor %}
