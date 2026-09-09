@@ -75,6 +75,35 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .badge { color: #ff3333; font-weight: bold; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;}
 .date { color: #666666; font-size: 0.8rem; }
 
+/* --- Compact Archive Cards (No Descriptions) --- */
+.card-archive { 
+    background: #050202; 
+    border: 1px solid #440000; 
+    border-radius: 4px; 
+    padding: 12px 16px; /* Tighter padding */
+    display: block; 
+    transition: all 0.2s ease; 
+}
+.card-archive:hover { 
+    background: #0a0303; 
+    border-color: #ff6666; 
+    box-shadow: 0 4px 15px rgba(255,102,102,0.15); 
+    transform: translateY(-2px); 
+}
+.card-archive .card-header { 
+    margin-bottom: 0; /* Remove bottom margin since there's no description below */
+    border-bottom: none; 
+    padding-bottom: 0; 
+}
+.card-archive h3 { 
+    margin: 0; 
+    font-size: 1rem; 
+    color: #ffffff; 
+}
+.card-archive:hover h3 { 
+    color: #ff6666; 
+}
+
 /* Card Titles - Hover turns to lighter red */
 .card h3 { margin: 0 0 10px 0; font-size: 1.1rem; animation: none; text-shadow: none; color: #ffffff; letter-spacing: normal; text-transform: none; }
 .card:hover h3 { color: #ff6666; }
