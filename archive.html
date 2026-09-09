@@ -1,0 +1,22 @@
+---
+layout: default
+title: "~/archive"
+---
+
+<div class="hero">
+    <p class="glitch" data-text="Minor challenges, scripts, and quick notes.">Minor challenges, scripts, and quick notes.</p>
+</div>
+
+<h2 id="archive">Archive</h2>
+<div class="grid">
+    {% for post in site.categories.Archive %}
+    <a href="{{ post.url | relative_url }}" class="card">
+        <div class="card-header">
+            <span class="badge">Minor</span>
+            <span class="date">{{ post.date | date: "%b %Y" }}</span>
+        </div>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
+    </a>
+    {% endfor %}
+</div>
