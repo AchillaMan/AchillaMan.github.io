@@ -2,6 +2,7 @@
 layout: default
 title: "placeholder challenge write-up"
 category: "pwn - hard"
+tags: [pwn, x64, bof]
 ---
 
 # what is this about?
