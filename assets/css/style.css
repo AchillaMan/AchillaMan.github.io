@@ -118,3 +118,22 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .card-archive:hover h3 { 
     color: #ff6666; 
 }
+/* Dynamic moving grid background */
+body {
+    background-color: #000;
+    background-image: 
+        linear-gradient(rgba(255, 0, 0, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: 0 0;
+    animation: grid-shift 15s linear infinite;
+}
+
+@keyframes grid-shift {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 40px 40px;
+    }
+}
