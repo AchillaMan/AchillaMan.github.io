@@ -108,7 +108,14 @@ h2 { font-size: 1.3rem; margin-bottom: 25px; color: var(--text-primary); }
 }
 
 /* --- Markdown Code Blocks --- */
-pre { background-color: #05080f; border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 15px; border-radius: 6px; overflow-x: auto; margin: 20px 0; }
+pre { 
+    background-color: #050505; /* Almost true black, very subtle */
+    border: 1px solid #1a1a1a; /* Extremely faint border */
+    padding: 15px; 
+    border-radius: 4px; /* Smaller, sharper corners */
+    overflow-x: auto; 
+    margin: 20px 0; 
+}
 code { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #e5e7eb; }
 p > code { background-color: rgba(255, 255, 255, 0.1); padding: 2px 5px; border-radius: 4px; color: var(--accent); }
 
