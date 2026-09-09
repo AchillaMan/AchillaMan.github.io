@@ -5,14 +5,21 @@
     <title>{{ page.title | default: "~/research/writeups" }}</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        
         :root {
-            --bg-color: #0a0e17;
-            --surface-color: #111827;
+            --bg-color: #0a0505; /* Deep dark red-black */
+            --surface-color: #140505; /* Slightly lighter red-black */
             --text-primary: #e5e7eb;
             --text-secondary: #9ca3af;
-            --accent: #00ff9d;
-            --accent-glow: rgba(0, 255, 157, 0.15);
-            --border: #374151;
+            --accent: #ff2a2a; /* Neon Red */
+            --accent-glow: rgba(255, 42, 42, 0.15);
+            --border: #3d1414; /* Dark red border */
+        }
+        
+        /* Scroll down and update the prompt color too */
+        .prompt::before {
+            content: "guest@system:~# ";
+            color: #9ca3af; /* Changes the blue prompt to a sleek grey */
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
