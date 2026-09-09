@@ -63,6 +63,30 @@
         footer { text-align: center; padding: 40px 0; color: var(--text-secondary); border-top: 1px dashed var(--border); font-size: 0.85rem; }
         footer a { color: var(--accent); text-decoration: none; }
         footer a:hover { text-decoration: underline; }
+        /* Code Block Styling */
+        pre {
+            background-color: #05080f; 
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #e5e7eb;
+        }
+        
+        /* Inline code styling (e.g. `like this`) */
+        p > code {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
