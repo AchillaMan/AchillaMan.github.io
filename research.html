@@ -1,0 +1,22 @@
+---
+layout: default
+title: "~/research"
+---
+
+<div class="hero">
+    <p class="glitch" data-text="Minor challenges, scripts, and quick notes.">notes and research topics</p>
+</div>
+
+<h2 id="archive">Research</h2>
+<div class="grid">
+    {% for post in site.categories.Research %}
+    <a href="{{ post.url | relative_url }}" class="card">
+        <div class="card-header">
+            <span class="badge"></span>
+            <span class="date">{{ post.date | date: "%b %Y" }}</span>
+        </div>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
+    </a>
+    {% endfor %}
+</div>
