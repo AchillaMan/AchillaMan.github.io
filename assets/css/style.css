@@ -100,7 +100,7 @@ h1, h2, h3 {
 }
 
 /* Links & Text - Hover glows white */
-a { color: #ffffff; text-decoration: none; border-bottom: 1px dashed #666666; transition: all 0.3s ease; position: relative; z-index: 2; }
+a { color: #ffffff; text-decoration: none; border-bottom: 1px solid #666666; transition: all 0.3s ease; position: relative; z-index: 2; }
 a:hover, a:focus { color: #ffffff; border-bottom: 1px solid #ffffff; text-shadow: 0 0 10px #ffffff; }
 p { font-size: 17px; color: #ffffff; margin-bottom: 1.2rem; white-space: pre-wrap; position: relative; z-index: 2; }
 
@@ -110,7 +110,7 @@ pre > code { display: block; white-space: inherit; font-family: inherit; font-si
 code:not(pre > code) { background: #0a0a0a; color: #ffffff; padding: 0.1em 0.3em; font-family: monospace; font-size: 0.95em; border-radius: 3px; border: 1px solid #333333; display: inline; line-height: 1.2; }
 
 /* --- NAVIGATION --- */
-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px dashed #444444; margin-bottom: 40px; position: relative; z-index: 2; }
+nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #444444; margin-bottom: 40px; position: relative; z-index: 2; }
 .logo { font-size: 1.5rem; border: none; font-weight: bold; }
 .logo:hover { border: none; text-shadow: 0 0 10px #ffffff; }
 .nav-links a { margin-left: 20px; font-weight: bold; border: none; }
