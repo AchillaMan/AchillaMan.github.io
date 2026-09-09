@@ -1,60 +1,68 @@
 /* Base styles */
-body { background: black; color: #f8f4f4; font-family: 'Courier New', Courier, monospace; font-size: 16px; line-height: 1.4; margin: 0; padding: 20px; overflow-x: hidden; }
+body { background: black; color: #cccccc; font-family: 'Courier New', Courier, monospace; font-size: 16px; line-height: 1.6; margin: 0; padding: 0; overflow-x: hidden; }
 
-/* Container with brutalist block - centered */
-.container { max-width: 900px; margin: 0 auto; padding: 10px 20px; border: 3px solid #ff0000; background: #080505; box-shadow: 0 0 5px #ff0000, inset 0 0 10px #440000; text-align: left; position: relative; z-index: 1; }
+/* Container - REMOVED THE BIG RED FRAME */
+.container { 
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 40px 20px; 
+    border: none;           /* Frame removed */
+    background: transparent; /* Blends into the body now */
+    box-shadow: none;       /* Removed harsh inner shadow */
+    position: relative; 
+    z-index: 1; 
+}
 
-/* Limit max width to about 80 characters for all blocks except pre/code and center them */
+/* Limit max width for readability */
 body, p, div, section, article { max-width: 80ch; margin-left: auto; margin-right: auto; white-space: normal; }
 
 /* Block code blocks */
-pre { max-width: none; background: #110000; color: #e9ede9; padding: 0.75em 1em; border: 1px solid #770000; font-family: monospace; font-size: 14px; overflow-x: auto; border-radius: 4px; box-shadow: none; margin: 1em 0; white-space: pre; }
-pre > code { display: block; white-space: inherit; font-family: inherit; font-size: inherit; color: inherit; background: transparent; border: none; padding: 0; margin: 0; box-shadow: none; }
+pre { max-width: none; background: #0a0303; color: #e9ede9; padding: 1.2em; border: 1px solid #440000; font-family: monospace; font-size: 14px; overflow-x: auto; border-radius: 4px; margin: 1em 0; white-space: pre; }
+pre > code { display: block; white-space: inherit; font-family: inherit; font-size: inherit; color: inherit; background: transparent; border: none; padding: 0; margin: 0; }
 
 /* Inline code */
-code:not(pre > code) { background: #110000; color: #ff0000; padding: 0.1em 0.3em; font-family: monospace; font-size: 0.95em; border-radius: 3px; border: 1px solid #770000; white-space: normal; box-shadow: none; display: inline; vertical-align: baseline; line-height: 1.2; }
+code:not(pre > code) { background: #0a0303; color: #ff3333; padding: 0.1em 0.3em; font-family: monospace; font-size: 0.95em; border-radius: 3px; border: 1px solid #440000; display: inline; line-height: 1.2; }
 
-/* Heading style - glitchy text effect */
-h1, h2, h3 { font-weight: bold; color: #ff0000; position: relative; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem; animation: glitch 1.5s infinite, red-glitch-text 4s linear infinite; background: linear-gradient(90deg, #ff0000, #ff4444, #aa0000, #ff0000, #ffffff, #ff0000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 5px #f00, 0 0 10px #f44, 0 0 15px #f00; }
+/* Headings - Modernized the glitch slightly */
+h1, h2, h3 { font-weight: bold; color: #ff0000; position: relative; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; animation: glitch 2s infinite; text-shadow: 0 0 5px #f00, 2px 0px #0ff; }
 
-/* Links styled like terminal commands */
+/* Links */
 a { color: #ff0000; text-decoration: none; border-bottom: 1px dashed #ff0000; transition: all 0.3s ease; }
-/* Changed hover to Cyan for high contrast against the red */
 a:hover, a:focus { color: #00ffff; border-bottom: 1px solid #00ffff; text-shadow: 0 0 10px #00ffff; }
 
-/* Paragraph style - old terminal text */
-p { font-size: 14px; color: #f8f4f4; margin-bottom: 1rem; white-space: pre-wrap; text-shadow: 0 0 2px #ff0000, 0 0 4px #ff0000; }
-
-/* Scrolling banner */
-.scrolling-banner { width: 100%; background: black; border-bottom: 3px solid #ff0000; overflow: hidden; white-space: nowrap; box-shadow: 0 0 10px #ff0000, inset 0 -5px 15px #440000; text-align: center; padding: 10px 0; margin-bottom: 2em; position: relative; }
-.scrolling-banner .text { display: inline-block; white-space: nowrap; font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 1.5rem; letter-spacing: 0.3em; text-transform: uppercase; animation: scroll-left 10s linear infinite, glitch 1.5s infinite, red-glitch-text 4s linear infinite; background: linear-gradient(90deg, #ff0000, #ff4444, #aa0000, #ff0000, #ffffff, #ff0000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 10px #f00, 1px 0 5px #fff, -1px 0 5px #a00; transform: translateX(100%); }
+/* Paragraph style */
+p { font-size: 15px; color: #cccccc; margin-bottom: 1.2rem; white-space: pre-wrap; }
 
 /* CRT scanlines */
-.scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(rgba(255,0,0,0.05) 0px, rgba(255,0,0,0.05) 1px, transparent 1px, transparent 3px); mix-blend-mode: overlay; z-index: 9999; pointer-events: none; }
+.scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 1px, transparent 1px, transparent 3px); mix-blend-mode: overlay; z-index: 9999; pointer-events: none; }
 
-/* Glitch animation (Cyan and White shifting to contrast the red) */
+/* Glitch animation */
 @keyframes glitch {
-  0% { text-shadow: 2px 0 cyan, -2px 0 white, 0 0 10px #ff0000; }
-  20% { text-shadow: -2px 0 cyan, 2px 0 white, 0 0 10px #ff0000; }
-  40% { text-shadow: 2px 0 white, -2px 0 cyan, 0 0 10px #ff0000; }
-  60% { text-shadow: -2px 0 white, 2px 0 cyan, 0 0 10px #ff0000; }
-  80%, 100% { text-shadow: 0 0 15px #ff0000; }
+  0% { text-shadow: 1px 0 cyan, -1px 0 white, 0 0 5px #ff0000; }
+  20% { text-shadow: -1px 0 cyan, 1px 0 white, 0 0 5px #ff0000; }
+  40% { text-shadow: 1px 0 white, -1px 0 cyan, 0 0 5px #ff0000; }
+  60% { text-shadow: -1px 0 white, 1px 0 cyan, 0 0 5px #ff0000; }
+  80%, 100% { text-shadow: 0 0 8px #ff0000; }
 }
-@keyframes scroll-left { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-@keyframes red-glitch-text { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
 
-/* --- GRID & CARDS --- */
-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 2px solid #ff0000; margin-bottom: 30px; }
-.logo { font-size: 1.5rem; border: none; }
+/* --- GRID & CARDS (Made Modern) --- */
+nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px dashed #440000; margin-bottom: 40px; }
+.logo { font-size: 1.5rem; border: none; font-weight: bold; }
 .logo:hover { border: none; }
-.nav-links a { margin-left: 20px; font-weight: bold; }
+.nav-links a { margin-left: 20px; font-weight: bold; border: none; }
+.nav-links a:hover { border-bottom: 1px solid #00ffff; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-bottom: 40px; }
-.card { background: #080505; border: 2px solid #ff0000; padding: 15px; display: block; box-shadow: inset 0 0 10px #440000; transition: all 0.2s ease; border-bottom: 2px solid #ff0000; }
-.card:hover { background: #110000; border-color: #00ffff; box-shadow: inset 0 0 15px #00ffff; text-shadow: none; }
-.card-header { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #770000; padding-bottom: 5px; }
-.badge { color: #ff0000; font-weight: bold; }
-.date { color: #aa0000; }
-.card h3 { margin: 0 0 10px 0; font-size: 1.2rem; animation: none; background: none; -webkit-text-fill-color: #ff0000; text-shadow: 0 0 5px #ff0000; }
-.card:hover h3 { -webkit-text-fill-color: #00ffff; text-shadow: 0 0 5px #00ffff; }
-.card p { font-size: 0.9rem; border: none; margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
+
+/* Modernized Card: Thinner borders, rounded corners, subtle hover lift */
+.card { background: #050202; border: 1px solid #440000; border-radius: 4px; padding: 20px; display: block; transition: all 0.2s ease; }
+.card:hover { background: #0a0303; border-color: #ff0000; box-shadow: 0 4px 15px rgba(255,0,0,0.15); transform: translateY(-3px); }
+
+.card-header { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #220000; padding-bottom: 8px; }
+.badge { color: #ff3333; font-weight: bold; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;}
+.date { color: #666666; font-size: 0.8rem; }
+
+/* Card Titles are now clean white, turning cyan on hover */
+.card h3 { margin: 0 0 10px 0; font-size: 1.1rem; animation: none; text-shadow: none; color: #ffffff; letter-spacing: normal; text-transform: none; }
+.card:hover h3 { color: #00ffff; }
+.card p { font-size: 0.9rem; border: none; margin: 0; color: #999999; }
