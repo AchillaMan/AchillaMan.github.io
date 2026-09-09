@@ -10,7 +10,7 @@ category: "pwn - hard"
 
 solve script:
 
-```
+```python
 from pwn import *
 
 elf = ELF('./challenge')
