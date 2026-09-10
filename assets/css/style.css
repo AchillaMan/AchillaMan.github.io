@@ -120,7 +120,16 @@ pre > code { display: block; white-space: inherit; font-family: inherit; font-si
 code:not(pre > code) { background: #0a0a0a; color: #ffffff; padding: 0.1em 0.3em; font-family: monospace; font-size: 0.95em; border-radius: 3px; border: 1px solid #333333; display: inline; line-height: 1.2; }
 
 /* --- NAVIGATION --- */
-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #444444; margin-bottom: 40px; position: relative; z-index: 2; }
+nav { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: baseline; /* Fixed vertical text alignment */
+    padding-bottom: 20px; 
+    border-bottom: 1px solid #444444; 
+    margin-bottom: 40px; 
+    position: relative; 
+    z-index: 2; 
+}
 .logo { font-size: 1.5rem; border: none; font-weight: bold; }
 .logo:hover { border: none; text-shadow: 0 0 10px #ffffff; }
 .nav-links a { margin-left: 20px; font-weight: bold; border: none; }
