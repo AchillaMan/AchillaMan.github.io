@@ -123,7 +123,7 @@ code:not(pre > code) { background: #0a0a0a; color: #ffffff; padding: 0.1em 0.3em
 nav { 
     display: flex; 
     justify-content: space-between; 
-    align-items: center; 
+    align-items: baseline; /* Aligns text baselines across different font sizes */
     padding-bottom: 20px; 
     border-bottom: 1px solid #444444; 
     margin-bottom: 40px; 
