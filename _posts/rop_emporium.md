@@ -9,7 +9,7 @@ date: 2026-09-09
 ## ret2win
 basic ret2win challenge, no mitigations
 
-```
+```python
 from pwn import *
 p = process('./ret2win')
 
