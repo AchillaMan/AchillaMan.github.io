@@ -192,7 +192,8 @@ io.interactive()
 
 this challenge has a quirk, there is a filter for certain bytes of input we send through, however the challenge
 gives us a hint: `Think about how we're going to overcome the badchars issue; should we try to avoid them entirely, or could we use gadgets to change our string once it's in memory?`,
-so we have to modify our data after it is loaded memory, we use a `xor reg1, reg2` gadget with a xor key value of 2 to achieve this so we can xor the flag.txt so its bad chars dont get detected and then xor it again to turn it back into flag.txt (xor is self-reversible) 
+so we have to modify our data after it is loaded memory, we use a `xor reg1, reg2` gadget with a xor key value of 2 to achieve this so we can xor the flag.txt so its bad chars don't get detected and then xor it again to turn it back into flag.txt (xor is self-reversible) 
+
 besides all of that, every other concept is the same to the previous challenges: 
 
 ```python
