@@ -16,7 +16,7 @@ title: "~/archive"
         {% for post in year.items %}
         <a href="{{ post.url | relative_url }}" class="card-archive">
             <div class="card-header" style="display: flex; align-items: center; justify-content: flex-start; gap: 15px; margin-bottom: 0; border-bottom: none; padding-bottom: 0; width: 100%; flex-wrap: wrap;">
-                {% if post.category and post.category != 'Archive' %}
+                {% if post.category %}
                 <span class="badge">{{ post.category | upcase }}</span>
                 {% endif %}
                 <span class="date">{{ post.date | date: "%b %d" }}</span>
