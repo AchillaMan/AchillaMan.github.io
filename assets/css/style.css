@@ -147,7 +147,7 @@ nav {
 .nav-links a { 
     margin-left: 0; 
     font-weight: bold; 
-    border: none; 
+    border-bottom: 1px solid transparent; /* Reserves 1px space to prevent shaking */
     line-height: 1; 
 }
 .nav-links a:hover { 
