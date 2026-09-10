@@ -7,6 +7,9 @@ date: 2026-09-09
 description: "my solutions for the challenges of the ROP emporium series"
 ---
 
+* TOC
+{:toc}
+
 ## ret2win
 basic ret2win challenge, no mitigations
 our input length is not properly checked, which results
