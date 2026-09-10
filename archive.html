@@ -1,3 +1,4 @@
+HTML
 ---
 layout: default
 title: "~/archive"
@@ -15,7 +16,7 @@ title: "~/archive"
     <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
         {% for post in year.items %}
         <a href="{{ post.url | relative_url }}" class="card-archive">
-            <div class="card-header" style="display: flex; align-items: center; justify-content: flex-start; gap: 15px; margin-bottom: 0; border-bottom: none; padding-bottom: 0; width: 100%; flex-wrap: wrap;">
+            <div class="card-header">
                 {% if post.category %}
                 <span class="badge">{{ post.category | upcase }}</span>
                 {% endif %}
