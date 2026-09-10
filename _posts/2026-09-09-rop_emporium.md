@@ -152,7 +152,7 @@ in this challenge there is no free `'/bin/cat flag.txt'` nor free `system()` cal
 however there is a plt entry of a `print_file()` function which just opens the file of our choice, but
 how do we open flag.txt???
 
-using a `mov [reg1], reg2` gadget from the binary which takes the contents of reg2 and moves it into what is in the memory address of reg2,
+using a `mov [reg1], reg2` gadget from the binary which takes the contents of reg2 and moves it into what is in the memory address of reg1,
 we use this gadget to write the flag.txt file name into the .bss section of the binary (uninitialized data) and then use the traditional pop rdi
 gadget to do `print_file("flag.txt")` (we point the rdi register to the .bss section where we wrote 'flag.txt'):
 
@@ -192,7 +192,7 @@ io.interactive()
 
 this challenge has a quirk, there is a filter for certain bytes of input we send through, however the challenge
 gives us a hint: `Think about how we're going to overcome the badchars issue; should we try to avoid them entirely, or could we use gadgets to change our string once it's in memory?`,
-so we have to modify our data after it is loaded memory, we use a `xor reg1, reg2` gadget with a xor key value of 2 to achieve this so we can xor the flag.txt so its bad chars don't get detected and then xor it again to turn it back into flag.txt (xor is self-reversible) 
+so we have to modify our data after it is loaded memory, we use a `xor reg1, reg2` gadget with a xor key value of 2 to xor the 'flag.txt' string to send it encoded (while also not transforming it into any other illegal bytes) and then using our xor gadget we xor it while it is already in memory to gain the original 'flag.txt' string and proceed with the exploit  
 
 besides all of that, every other concept is the same to the previous challenges: 
 
