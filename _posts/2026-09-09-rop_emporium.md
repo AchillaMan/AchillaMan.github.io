@@ -4,7 +4,7 @@ title: "rop emporium series"
 category: "pwn"
 tags: [pwn, x64, rop]
 date: 2026-09-09
-description: my solutions for the challenges of the rop emporium series
+description: "my solutions for the challenges of the rop emporium series"
 ---
 
 ## ret2win
