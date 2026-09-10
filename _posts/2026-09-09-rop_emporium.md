@@ -270,9 +270,12 @@ Dump of assembler code for function questionableGadgets:
 End of assembler dump.
 ```
 1. `bextr rbx, rcx, rdx`: this gadget controls the rbx register. bextr extracts bits from rcx based on the control value in rdx. By popping 0x4000 into rdx (start at bit 0, extract 64 bits), the instruction simply copies rcx into rbx. because the gadget adds 0x3ef2 to rcx before the copy, we have to substract 0x3ef2 from the target value before pushing it to the stack to cancel out the addition
-2. `xlat BYTE PTR ds:[rbx]`: xlat adds rbx and al together, treats the sum as a memory address, reads the byte at that address, and places it into al. We use this to pull characters (every flag character we wrote into memory) that already exist inside the binary's memory into the al register
+2. `xlat BYTE PTR ds:[rbx]`: xlat adds rbx and al together, treats the sum as a memory address, reads the byte at that address, and places it into al. We use this to pull characters (the flag chars) that already exist inside memory into the al register
 3. `stos BYTE PTR es:[rdi],al`: stos writes the byte currently in al to the memory address stored in rdi, it then automatically increments rdi by 1, perfectly positioning the pointer for the next byte write
 
+in combination, we use the bextr gadget which takes our compensated offset from the stack and places it in the rbx register so the next xlat gadget looks exactly where we want, then with the xlat gadget uses the offset in rbx to look up a specific character in memory and loads that character into the al register and lastly, the stos gadget takes the character now sitting in al, writes it into the .bss section, and increments the rdi pointer by one to do another loop for the next char
+
+the solve script:
 ```python
 from pwn import *
 
