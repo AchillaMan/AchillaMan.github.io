@@ -9,6 +9,8 @@ description: "my solutions for the challenges of the rop emporium series"
 
 ## ret2win
 basic ret2win challenge, no mitigations
+our input length is not properly checked, which results
+to a return address overwrite to point to win()
 
 ```python
 from pwn import *
