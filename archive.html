@@ -12,16 +12,18 @@ title: "~/archive"
 
 {% for year in grouped_posts %}
     <h3 style="margin-top: 40px; border-bottom: 1px solid #444444; padding-bottom: 5px;">{{ year.name }}</h3>
-    <div class="grid" style="margin-top: 20px;">
+    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
         {% for post in year.items %}
         <a href="{{ post.url | relative_url }}" class="card-archive">
-            <div class="card-header" style="flex-wrap: wrap; width: 100%;">
+            <div class="card-header" style="display: flex; align-items: center; justify-content: flex-start; gap: 15px; margin-bottom: 0; border-bottom: none; padding-bottom: 0; width: 100%; flex-wrap: wrap;">
+                {% if post.category and post.category != 'Archive' %}
                 <span class="badge">{{ post.category | upcase }}</span>
+                {% endif %}
                 <span class="date">{{ post.date | date: "%b %d" }}</span>
-                <h3 style="display:inline; margin-left: 10px;">{{ post.title }}</h3>
+                <h3 style="display:inline; margin: 0; font-size: 0.95rem; font-weight: normal;">{{ post.title }}</h3>
                 
                 {% if post.tags %}
-                <div class="tags" style="margin-top: 0; margin-left: auto;">
+                <div class="tags" style="margin-top: 0; margin-left: auto; display: flex; gap: 8px;">
                     {% for tag in post.tags %}
                     <span class="tag">#{{ tag }}</span>
                     {% endfor %}
