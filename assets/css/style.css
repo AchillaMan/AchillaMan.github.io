@@ -106,10 +106,10 @@ p {
     font-size: 17px; 
     color: #ffffff; 
     margin-bottom: 1.2rem; 
-    white-space: normal; /* Changed from pre-wrap */
-    word-break: normal;  /* Prevents words from splitting mid-letter */
-    overflow-wrap: break-word; /* Allows impossibly long strings (like hex payloads) to wrap safely */
-    hyphens: none; /* Disables automatic browser hyphenation */
+    white-space: normal; 
+    word-break: normal; 
+    overflow-wrap: break-word; 
+    hyphens: none; 
     position: relative; 
     z-index: 2; 
 }
@@ -123,16 +123,30 @@ code:not(pre > code) { background: #0a0a0a; color: #ffffff; padding: 0.1em 0.3em
 nav { 
     display: flex; 
     justify-content: space-between; 
-    align-items: baseline; /* Fixed vertical text alignment */
+    align-items: center; 
     padding-bottom: 20px; 
     border-bottom: 1px solid #444444; 
     margin-bottom: 40px; 
     position: relative; 
     z-index: 2; 
 }
-.logo { font-size: 1.5rem; border: none; font-weight: bold; }
+.logo { 
+    font-size: 1.5rem; 
+    line-height: 1; 
+    border: none; 
+    font-weight: bold; 
+}
 .logo:hover { border: none; text-shadow: 0 0 10px #ffffff; }
-.nav-links a { margin-left: 20px; font-weight: bold; border: none; }
+.nav-links { 
+    display: flex; 
+    align-items: center; 
+}
+.nav-links a { 
+    margin-left: 20px; 
+    font-weight: bold; 
+    border: none; 
+    line-height: 1; 
+}
 .nav-links a:hover { color: #ffffff; border-bottom: 1px solid #ffffff; text-shadow: 0 0 10px #ffffff; }
 
 /* --- CARDS --- */
