@@ -179,35 +179,21 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
     background: #1a1a1a;
 }
 
-/* Table of Contents */
+/* Table of Contents - Minimal */
 #markdown-toc {
-    background: #050505;
-    border: 1px solid #333333;
-    border-radius: 4px;
-    padding: 20px 20px 20px 40px;
     margin-bottom: 30px;
-    font-family: monospace;
-}
-
-/* Adds a fake terminal command at the top of the box */
-#markdown-toc::before {
-    content: "ls -l ./challenges/";
-    display: block;
-    color: #aaaaaa;
-    margin-left: -20px;
-    margin-bottom: 10px;
-    font-weight: bold;
+    padding-left: 20px;
 }
 
 #markdown-toc li {
-    margin-bottom: 5px;
-    color: #666666;
+    margin-bottom: 8px;
+    color: #cccccc;
 }
 
-/* Clean up link styles specifically inside the ToC */
 #markdown-toc a {
     border-bottom: none;
     color: #cccccc;
+    transition: all 0.2s ease;
 }
 
 #markdown-toc a:hover {
