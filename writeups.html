@@ -12,7 +12,6 @@ layout: default
                 <span class="date">{{ post.date | date: "%b %Y" }}</span>
             </div>
             <h3>{{ post.title }}</h3>
-            <p>{{ post.description | default: post.excerpt | strip_html | truncatewords: 25 }}</p>
             
             {% if post.tags %}
             <div class="tags">
