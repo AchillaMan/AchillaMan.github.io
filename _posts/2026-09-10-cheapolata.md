@@ -6,6 +6,8 @@ tags: [x86_64, heap, tcache, "glibc-2.27"]
 date: 2026-07-24
 ---
 
+## FCSC 2024 - pwn - cheapolata - medium
+
 this challenge runs on glibc-2.27, double free protection and safe-linking are non-existent in this version, the challenge's source code is provided
 the challenge implements its own libc `__free_hook` wrapper for "safety" but the wrapper trusts a plain global variable (`old_free_hook`) that lives on attacker-writable memory
 firstly, we corrupt the tcache freelist to get an allocation landing directly on `old_free_hook`, and overwrite it with `printf@plt`, `free()` on a chunk containing `"%25$p"`
