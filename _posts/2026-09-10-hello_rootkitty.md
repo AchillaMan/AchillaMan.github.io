@@ -5,8 +5,9 @@ category: "pwn - medium"
 tags: [x86_64, kernel, rootkit, rop]
 date: 2026-09-10
 description: "my solution for the hello_rootkitty pwn challenge from fcsc 2020, we exploit a rootkit's memory flaw to get the flag"
+---
 
-### A machine has been infected with the rootkit Hello Rootkitty, which prevents certain files from being read. Your mission is to help the victim recover the content of the affected files. Once you are connected to SSH (credentials: ctf:ctf), run ./wrapper to start the challenge.
+#### A machine has been infected with the rootkit Hello Rootkitty, which prevents certain files from being read. Your mission is to help the victim recover the content of the affected files. Once you are connected to SSH (credentials: ctf:ctf), run ./wrapper to start the challenge.
 
 In this challenge we are provided with a linux kernel module named `ecsc.ko` which is rootkit. We are also given a host machine we can connect through ssh containing a vm which runs the kernel module, a shared folder between the vm and the host exists.
 By reverse engineering the provided module we come across these functions: 
