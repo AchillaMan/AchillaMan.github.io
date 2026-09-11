@@ -3,7 +3,7 @@ layout: default
 title: "FCSC 2024 - cheapolata"
 category: "pwn - medium"
 tags: [x86_64, heap, tcache, "glibc-2.27"]
-date: 2026-09-10
+date: 2026-07-24
 ---
 
 this challenge runs on glibc-2.27, double free protection and safe-linking are non-existent in this version, the challenge's source code is provided
