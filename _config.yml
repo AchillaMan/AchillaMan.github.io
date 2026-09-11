@@ -1,4 +1,4 @@
 name: 0xWriteups
 description: CTF Writeups and Security Research
 markdown: kramdown
-permalink: /:categories/:title/
+permalink: /writeups/:title/
