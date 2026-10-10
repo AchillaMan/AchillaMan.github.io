@@ -2,7 +2,7 @@
 layout: default
 title: "ROP emporium"
 category: "pwn"
-tags: [x86_64, rop]
+tags: [x86-64, rop]
 date: 2026-09-09
 description: "my solutions for the challenges of the ROP emporium series"
 ---
