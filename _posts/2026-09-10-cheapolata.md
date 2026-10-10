@@ -2,7 +2,7 @@
 layout: default
 title: "FCSC 2024 - cheapolata"
 category: "pwn - medium"
-tags: [x86_64, heap, tcache, "glibc-2.27"]
+tags: [x86-64, heap, tcache, "glibc-2.27"]
 date: 2026-07-24
 ---
 
