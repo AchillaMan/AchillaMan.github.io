@@ -2,7 +2,7 @@
 layout: default
 title: "FCSC 2020 - hello rootkitty"
 category: "pwn - medium"
-tags: [x86_64, kernel, rootkit, rop]
+tags: [x86-64, kernel, rootkit, rop]
 date: 2026-07-10
 description: "my solution for the hello_rootkitty pwn challenge from fcsc 2020, we exploit a rootkit's memory flaw to get the flag"
 ---
