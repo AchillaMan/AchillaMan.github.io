@@ -3,6 +3,7 @@ layout: default
 title: "FCSC 2020 - why not a sandbox?"
 category: "pwn - medium"
 tags: [x86-64, python, jail]
+archive_only: true
 ---
 
 ## FCSC 2020 - pwn - why not a sandbox? - medium
