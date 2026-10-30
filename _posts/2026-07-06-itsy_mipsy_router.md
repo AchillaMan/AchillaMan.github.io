@@ -4,6 +4,7 @@ title: "FCSC 2021 - itsy mipsy router"
 category: "pwn - medium"
 tags: [mips, shellcode]
 date: 2026-07-06
+archive_only: true
 ---
 
 this challenge gives us a simple bof, however by using checksec we can see that all mitigations are disabled, its also worth noting that it is a mips big endian binary, so we write 
